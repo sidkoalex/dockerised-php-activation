@@ -1,0 +1,136 @@
+<?php
+
+require_once __DIR__.'/ActivationFactory.php';
+require_once __DIR__.'/impl/util/uuid.php';
+require_once __DIR__.'/core/dto/SerialActivationInputDTO.php';
+require_once __DIR__.'/core/dto/SerialActivationOutputDTO.php';
+require_once __DIR__.'/core/dto/SerialCreationDTO.php';
+
+class ActivationService
+{
+    private static $instance = null;
+
+    public static function instance(): ActivationService
+    {
+        if (static::$instance === null) {
+            static::$instance = new static();
+        }
+
+        return static::$instance;
+    }
+
+    /**
+     * Create and save new serial number for user.
+     * If serial number or key for this serial number has not created yet, they will be created.
+     *
+     * @param \SerialCreationDTO $creationDTO
+     * @return void New user serial record id
+     * @see \ActivationService::makeNewKey()
+     */
+    public function makeNewSerialForUser(SerialCreationDTO $creationDTO)
+    {
+        $newSerialId = $this->makeNewSerial();
+        $newUserSerial = new UserSerial(null, $creationDTO->getUserId(), $creationDTO->getUserName(), $newSerialId, "", SerialStatusEnum::NOT_USED);
+
+        for ($i = 0; $i < min([$creationDTO->getPcCount(), 100]); $i++)
+            ActivationFactory::userSerialRepository()->save($newUserSerial);
+    }
+
+    /**
+     * Create and save new serial number using last generated key.
+     * If key has not generated yet, "makeNewKey()" will be called.
+     * If last key was used more than 5 times, new key will be created.
+     *
+     * @return int New serial id
+     * @throws
+     * @see \ActivationService::makeNewKey()
+     */
+    public function makeNewSerial(): int
+    {
+
+        $lastKey = ActivationFactory::keyRepository()->findLast();
+        $lastKeyId = is_null($lastKey) ? null : $lastKey->getId();
+        $lastKeyIdUseCount = is_null($lastKeyId) ? -1 : ActivationFactory::serialRepository()->countKeyUse($lastKeyId);
+        $lastKeyId = $lastKeyIdUseCount >= 5 ? $this->makeNewKey() : $lastKeyId;
+        $lastKeyId = is_null($lastKeyId) ? $this->makeNewKey() : $lastKeyId;
+
+        $date = new DateTime();
+        $date->modify('+1 month');
+
+        $newSerialExpired = $date->format("Y-m-d");
+        $newSerialNumber = uuid();
+
+        $newSerial = new Serial(null, $lastKeyId, false, $newSerialNumber, $newSerialExpired);
+        $id = ActivationFactory::serialRepository()->save($newSerial);
+
+        return $id;
+    }
+
+    /**
+     * Generate and save new key pair using CipherKeyGenerator
+     *
+     * @return int New key id
+     * @throws
+     */
+    public function makeNewKey(): int
+    {
+        $cipherKey = ActivationFactory::cipherKeyGenerator()->generateKey();
+        $key = Key::fromCipherKey($cipherKey);
+        $id = ActivationFactory::keyRepository()->save($key);
+
+        return $id;
+    }
+
+    public function activateSerial(SerialActivationInputDTO $activationDTO): SerialActivationOutputDTO
+    {
+        if (empty($activationDTO->getSerial()) || empty($activationDTO->getPcHash())) {
+            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::NOT_FOUND);
+        }
+
+
+        // Found Serial
+        $serial = ActivationFactory::serialRepository()->findBySerialNo($activationDTO->getSerial());
+        if ($serial == null) {
+            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::NOT_FOUND);
+        }
+
+
+        // Check User Serial count
+        $notUsedCount = ActivationFactory::userSerialRepository()->countNotUsed($serial->getId());
+        if ($notUsedCount <= 0) {
+            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::INTERNAL_ACTIVATION_LIMIT_EXCEED);
+        }
+
+
+        // Found User Serial
+        $userSerial = ActivationFactory::userSerialRepository()->findBySerialIdAndStatus($serial->getId(), SerialStatusEnum::NOT_USED);
+        if ($userSerial == null) {
+            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::NOT_FOUND);
+        }
+
+        if ($serial->isBanned()) {
+            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::IS_BANNED);
+        }
+        if (date("Y-m-d") > $serial->getExpireDate()) {
+            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::EXPIRED);
+        }
+
+        // Update user serial as ACTIVATED
+        $userSerial->setPcHash($activationDTO->getPcHash());
+        $userSerial->setStatus(SerialStatusEnum::ACTIVATED);
+        ActivationFactory::userSerialRepository()->save($userSerial);
+
+        // Find encrypted pcHash
+        $keyId = $serial->getKeyId();
+        $key = ActivationFactory::keyRepository()->findById($keyId);
+        $pcHash = $activationDTO->getPcHash();
+        $userName = $userSerial->getUserName();
+        $encryptedPcHash = ActivationFactory::cipher()->encrypt($pcHash, $key->getPublicKey());
+
+        // Create result
+        $result = new SerialActivationOutputDTO(SerialActivationStatusEnum::ACTIVATED, $userName, $serial->getSerial(),
+            $encryptedPcHash, $key->getPrivateKey());
+
+        return $result;
+    }
+}
