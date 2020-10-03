@@ -421,25 +421,24 @@ if (! empty($_FILES)) {
         <header>
             <p>
                 <i class="fa fa-cloud-upload" aria-hidden="true"></i>
-                <span class="up">а</span>
-                <span class="load">ктивация</span>
+                <span class="up">A</span>
+                <span class="load">ctivation</span>
             </p>
         </header>
         <div class="body" id="drop">
             <i class="fa fa-file-text-o pointer-none" aria-hidden="true"></i>
-            <p class="pointer-none"><b>Перетяните</b> файл активации на эту область <br/> или <a href=""
-                                                                                                 id="triggerFile">нажмите
-                    сюда</a> чтобы выбрать</p>
+            <p class="pointer-none"><b>Drag</b> the activation file to this area <br/> or <a href=""
+                                                                                                 id="triggerFile">click here</a> to browse</p>
             <input type="file" multiple="multiple"/>
         </div>
         <footer>
             <div class="divider">
-                <span><AR>ВЫПОЛНЕНИЕ</AR></span>
+                <span><AR>EXECUTION</AR></span>
             </div>
             <div class="list-files">
                 <!--   template   -->
             </div>
-            <div class="result">Генерация файла лицензии.<br>Скачивание начнется автоматически...</div>
+            <div class="result">License file generation.<br>Download will start automatically...</div>
         </footer>
     </div>
 </div>

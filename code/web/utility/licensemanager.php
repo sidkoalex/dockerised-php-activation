@@ -56,7 +56,7 @@ if ($shouldActivateSerial) {
 </style>
 
 <h2>Create new serial for user</h2>
-<form action="serial.php" method="post">
+<form action="licensemanager.php" method="post">
     <input type="hidden" name="action" value="new_serial"/>
     <table border="1">
         <tr>
@@ -76,7 +76,7 @@ if ($shouldActivateSerial) {
 </form>
 
 <h2>Activate user serial</h2>
-<form action="serial.php" method="post">
+<form action="licensemanager.php" method="post">
     <input type="hidden" name="action" value="activate_serial"/>
     <table border="1">
         <tr>
