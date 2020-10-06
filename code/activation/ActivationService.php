@@ -133,11 +133,18 @@ class ActivationService
         $key = ActivationFactory::keyRepository()->findById($keyId);
         $pcHash = $activationDTO->getPcHash();
         $userName = $userSerial->getUserName();
-        $encryptedPcHash = ActivationFactory::cipher()->encrypt($pcHash, $key->getPublicKey());
+        $encryptedHash = ActivationFactory::cipher()->encrypt($pcHash, $key->getPublicKey());
 
         // Create result
-        $result = new SerialActivationOutputDTO(SerialActivationStatusEnum::ACTIVATED, $userName, $serial->getSerial(),
-            $encryptedPcHash, $key->getPrivateKey());
+        $result = new SerialActivationOutputDTO(
+            SerialActivationStatusEnum::ACTIVATED,
+            $userName,
+            $serial->getSerial(),
+            $encryptedHash,
+            $key->getPrivateKey(),
+            $serial->getPeriod(),
+            $userSerial->getActivatedAt()
+        );
 
         return $result;
     }
