@@ -127,7 +127,8 @@ abstract class MysqlRepository
         $result = $stmt->execute();
 
         if (! $result) {
-            error_log(mysqli_error($this->connection));
+            $error = mysqli_error($this->connection);
+            error_log($error);
         }
 
         if ($result) {

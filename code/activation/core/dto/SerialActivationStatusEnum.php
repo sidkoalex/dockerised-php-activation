@@ -6,8 +6,6 @@ class SerialActivationStatusEnum
 
     const IS_BANNED = "BANNED";
 
-    const EXPIRED = "EXPIRED";
-
     const NOT_FOUND = "NOT_FOUND";
 
     const INTERNAL_ACTIVATION_LIMIT_EXCEED = "ACTIVATION_LIMIT_EXCEED";

@@ -58,7 +58,7 @@ if ($shouldActivateSerial) {
 </style>
 
 <h2>Create new serial for user</h2>
-<form action="licensemanager.php" method="post">
+<form action="licensemanager.php" method="post" novalidate>
     <input type="hidden" name="action" value="new_serial"/>
     <table border="1">
         <tr>
@@ -164,7 +164,6 @@ if ($shouldActivateSerial) {
         <th>is_banned</th>
         <th>serial</th>
         <th>period</th>
-        <th>expire_date</th>
     </tr>
     <?php foreach ($serials as $serial): ?>
         <tr>
@@ -175,7 +174,6 @@ if ($shouldActivateSerial) {
                 <?php echo $serial->getSerial(); ?>
             </td>
             <td> <?php echo $serial->getPeriod(); ?></td>
-            <td> <?php echo $serial->getExpireDate(); ?></td>
         </tr>
     <?php endforeach; ?>
 </table>

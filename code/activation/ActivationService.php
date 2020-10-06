@@ -66,14 +66,10 @@ class ActivationService
         $lastKeyId = $lastKeyIdUseCount >= 5 ? $this->makeNewKey() : $lastKeyId;
         $lastKeyId = is_null($lastKeyId) ? $this->makeNewKey() : $lastKeyId;
 
-        $date = new DateTime();
-        $date->modify('+1 month');
-
-        $newSerialExpired = $date->format("Y-m-d");
         $newSerialNumber = uuid();
         $newSerialPeriod = $creationDTO->getPeriod();
 
-        $newSerial = new Serial(null, $lastKeyId, false, $newSerialNumber, $newSerialPeriod, $newSerialExpired);
+        $newSerial = new Serial(null, $lastKeyId, false, $newSerialNumber, $newSerialPeriod);
         $id = ActivationFactory::serialRepository()->save($newSerial);
 
         return $id;
@@ -123,9 +119,6 @@ class ActivationService
 
         if ($serial->isBanned()) {
             return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::IS_BANNED);
-        }
-        if (date("Y-m-d") > $serial->getExpireDate()) {
-            return SerialActivationOutputDTO::ofStatus(SerialActivationStatusEnum::EXPIRED);
         }
 
         // Update user serial as ACTIVATED

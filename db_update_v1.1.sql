@@ -9,3 +9,6 @@ ALTER TABLE serial
 # Add Activated_at
 ALTER TABLE user_serial
     ADD COLUMN activated_at DATE AFTER status;
+
+# Remove expire_date
+ALTER TABLE serial DROP COLUMN expire_date;

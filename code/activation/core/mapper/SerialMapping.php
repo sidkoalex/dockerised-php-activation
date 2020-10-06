@@ -6,7 +6,7 @@ trait SerialMapping
 {
     public static function fromDbRow(array $row)
     {
-        return new Serial($row['id'], $row['key_id'], $row['is_banned'], $row['serial'], $row['period'], $row['expire_date']);
+        return new Serial($row['id'], $row['key_id'], $row['is_banned'], $row['serial'], $row['period']);
     }
 
     public function toDbRow()
@@ -17,7 +17,6 @@ trait SerialMapping
             'is_banned' => intval($this->isBanned()),
             'serial' => $this->getSerial(),
             'period' => $this->getPeriod(),
-            'expire_date' => $this->getExpireDate(),
         ];
     }
 
@@ -27,9 +26,7 @@ trait SerialMapping
 
     public abstract function isBanned(): bool;
 
-    public abstract function getPeriod(): int;
+    public abstract function getPeriod(): ingett;
 
     public abstract function getSerial(): string;
-
-    public abstract function getExpireDate(): string;
 }
