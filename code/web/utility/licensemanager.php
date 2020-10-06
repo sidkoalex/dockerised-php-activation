@@ -133,6 +133,7 @@ if ($shouldActivateSerial) {
         <th>pc_hash</th>
         <th>product_name</th>
         <th>status</th>
+        <th>activated_at</th>
     </tr>
     <?php $prevSerialId = 0; ?>
     <?php foreach ($userSerials as $userSerial): ?>
@@ -148,6 +149,7 @@ if ($shouldActivateSerial) {
             <td style="color: <?php echo $statusColors[$userSerial->getStatus()] ?>">
                 <?php echo $userSerial->getStatus(); ?>
             </td>
+            <td> <?php echo $userSerial->getActivatedAt(); ?></td>
         </tr>
         <?php $prevSerialId = $userSerial->getSerialId(); ?>
     <?php endforeach; ?>

@@ -13,7 +13,9 @@ trait UserSerialMapping
             $row['serial_id'],
             $row['pc_hash'],
             $row['product_name'],
-            $row['status']);
+            $row['status'],
+            $row['activated_at']
+        );
     }
 
     public function toDbRow()
@@ -26,6 +28,7 @@ trait UserSerialMapping
             'pc_hash' => $this->getPcHash(),
             'product_name' => $this->getProductName(),
             'status' => $this->getStatus(),
+            'activated_at' => $this->getActivatedAt(),
         ];
     }
 

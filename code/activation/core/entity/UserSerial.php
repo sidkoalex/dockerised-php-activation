@@ -20,7 +20,9 @@ class UserSerial
 
     private $status;
 
-    public function __construct($id, $userId, string $userName, int $serialId, string $pcHash, string $productName, string $status)
+    private $activatedAt;
+
+    public function __construct($id, $userId, string $userName, int $serialId, string $pcHash, string $productName, string $status, $activatedAt = null)
     {
         $this->id = $id;
         $this->userId = $userId;
@@ -29,6 +31,7 @@ class UserSerial
         $this->pcHash = $pcHash;
         $this->productName = $productName;
         $this->status = $status;
+        $this->activatedAt = $activatedAt;
     }
 
     public function getId()
@@ -68,6 +71,10 @@ class UserSerial
         return $this->status;
     }
 
+    public function getActivatedAt() {
+        return $this->activatedAt;
+    }
+
     public function setProductName(string $productName)
     {
         $this->productName = $productName;
@@ -81,5 +88,10 @@ class UserSerial
     public function setStatus(string $status)
     {
         $this->status = $status;
+    }
+
+    public function setActivatedAt($activatedAt)
+    {
+        $this->activatedAt = $activatedAt;
     }
 }

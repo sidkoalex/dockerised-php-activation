@@ -1,9 +1,9 @@
 <?php
 
-require_once __DIR__.'/ActivationFactory.php';
-require_once __DIR__.'/impl/util/uuid.php';
-require_once __DIR__.'/core/dto/SerialActivationInputDTO.php';
-require_once __DIR__.'/core/dto/SerialActivationOutputDTO.php';
+require_once __DIR__ . '/ActivationFactory.php';
+require_once __DIR__ . '/impl/util/uuid.php';
+require_once __DIR__ . '/core/dto/SerialActivationInputDTO.php';
+require_once __DIR__ . '/core/dto/SerialActivationOutputDTO.php';
 require_once __DIR__ . '/core/dto/UserSerialCreationDTO.php';
 require_once __DIR__ . '/core/dto/SerialCreationDTO.php';
 
@@ -40,7 +40,8 @@ class ActivationService
             $newSerialId,
             "",
             "",
-            SerialStatusEnum::NOT_USED);
+            SerialStatusEnum::NOT_USED,
+            null);
 
         for ($i = 0; $i < min([$creationDTO->getPcCount(), 100]); $i++)
             ActivationFactory::userSerialRepository()->save($newUserSerial);
@@ -131,6 +132,7 @@ class ActivationService
         $userSerial->setPcHash($activationDTO->getPcHash());
         $userSerial->setProductName($activationDTO->getProductName());
         $userSerial->setStatus(SerialStatusEnum::ACTIVATED);
+        $userSerial->setActivatedAt(date('Y-m-d'));
         ActivationFactory::userSerialRepository()->save($userSerial);
 
         // Find encrypted pcHash

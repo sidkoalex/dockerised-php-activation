@@ -5,3 +5,7 @@ ALTER TABLE user_serial
 # Add Period
 ALTER TABLE serial
     ADD COLUMN period INT NOT NULL DEFAULT 30 AFTER serial;
+
+# Add Activated_at
+ALTER TABLE user_serial
+    ADD COLUMN activated_at DATE AFTER status;
