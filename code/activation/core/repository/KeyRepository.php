@@ -6,7 +6,7 @@ interface KeyRepository
 {
     function save(Key $entity): int;
 
-    function findById(int $id): Key;
+    function findById(int $id);
 
     function findAll(): array;
 

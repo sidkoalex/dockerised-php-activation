@@ -17,7 +17,7 @@ class MysqlKeyRepository extends MysqlRepository implements KeyRepository
         return $id;
     }
 
-    function findById(int $id): Key
+    function findById(int $id)
     {
         $result = $this->select(self::TABLE_NAME, 'id', $id);
         $result = $this->mapEntities($result);

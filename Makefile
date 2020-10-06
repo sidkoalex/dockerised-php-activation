@@ -21,7 +21,7 @@ start:
 	docker-compose up -d
 	@echo ""
 	@echo "Links:"
-	@echo "Testing serials: http://localhost:8080/web/example/serial.php"
+	@echo "Testing serials: http://localhost:8080/web/utility/licensemanager.php"
 	@echo "Upload activation: http://localhost:8080/web/upload.php"
 
 stop:

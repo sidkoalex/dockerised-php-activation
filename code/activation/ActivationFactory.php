@@ -52,9 +52,6 @@ class ActivationFactory
     }
 }
 
-if ($_SERVER['HTTP_HOST']=='some.url')
-		ActivationFactory::$dbConfig = new DbConfig('localhost', 'root', 'mysql', 'activation');
-    else
-		ActivationFactory::$dbConfig = new DbConfig('localhost', '', '', '');
+ActivationFactory::$dbConfig = new DbConfig('mysqldb:3306', 'root', 'root', 'activation');
 
 ActivationFactory::$services = [];

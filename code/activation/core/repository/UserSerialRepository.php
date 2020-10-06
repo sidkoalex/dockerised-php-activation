@@ -6,7 +6,7 @@ interface UserSerialRepository
 {
     function save(UserSerial $entity): int;
 
-    function findById(int $id): UserSerial;
+    function findById(int $id);
 
     function findAll(): array;
 

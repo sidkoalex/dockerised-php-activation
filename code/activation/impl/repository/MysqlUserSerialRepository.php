@@ -20,7 +20,7 @@ class MysqlUserSerialRepository extends MysqlRepository implements UserSerialRep
         return $id;
     }
 
-    function findById(int $id): UserSerial
+    function findById(int $id)
     {
         $result = $this->select(self::TABLE_NAME, 'id', $id);
         $result = $this->mapEntities($result);

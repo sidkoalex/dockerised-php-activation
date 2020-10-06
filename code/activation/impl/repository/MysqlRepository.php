@@ -22,7 +22,7 @@ abstract class MysqlRepository
 
         $this->connection = mysqli_connect($h, $u, $p, $d);
 
-        if ($this->connection->connect_error) {
+        if ($this->connection === false) {
             die("Can't connect to mysql database");
         }
     }
