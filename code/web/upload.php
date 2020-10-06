@@ -8,7 +8,8 @@ if (! empty($_FILES)) {
     $data = json_decode($data, true);
     $serial = $data['serial'];
     $pcHash = $data['pc_hash'];
-    $dto = new SerialActivationInputDTO($serial, $pcHash);
+    $productName = $data['product_name'];
+    $dto = new SerialActivationInputDTO($serial, $pcHash, $productName);
     $activationResult = ActivationService::instance()->activateSerial($dto);
 
     $result = json_encode($activationResult);

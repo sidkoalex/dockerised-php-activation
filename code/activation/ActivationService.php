@@ -140,9 +140,6 @@ class ActivationService
         $dataToSignHash = sha1($dataToSignStr);
         $signedDataBase64 = ActivationFactory::cipher()->sign($dataToSignHash, $key->getPrivateKey());
 
-        echo "<pre>Data to sign: ".$dataToSignStr."</pre>";
-        echo "<pre>Data to sign sha1: ".$dataToSignHash."</pre>";
-
         // Create result
         $result = new SerialActivationOutputDTO(
             SerialActivationStatusEnum::ACTIVATED,
