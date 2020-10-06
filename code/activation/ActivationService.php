@@ -5,6 +5,7 @@ require_once __DIR__.'/impl/util/uuid.php';
 require_once __DIR__.'/core/dto/SerialActivationInputDTO.php';
 require_once __DIR__.'/core/dto/SerialActivationOutputDTO.php';
 require_once __DIR__ . '/core/dto/UserSerialCreationDTO.php';
+require_once __DIR__ . '/core/dto/SerialCreationDTO.php';
 
 class ActivationService
 {
@@ -29,7 +30,9 @@ class ActivationService
      */
     public function makeNewSerialForUser(UserSerialCreationDTO $creationDTO)
     {
-        $newSerialId = $this->makeNewSerial();
+        $newSerialCreationDTO = new SerialCreationDTO($creationDTO->getPeriod());
+        $newSerialId = $this->makeNewSerial($newSerialCreationDTO);
+
         $newUserSerial = new UserSerial(
             null,
             $creationDTO->getUserId(),
@@ -48,11 +51,12 @@ class ActivationService
      * If key has not generated yet, "makeNewKey()" will be called.
      * If last key was used more than 5 times, new key will be created.
      *
+     * @param SerialCreationDTO $creationDTO serial creation settings
      * @return int New serial id
      * @throws
      * @see \ActivationService::makeNewKey()
      */
-    public function makeNewSerial(): int
+    public function makeNewSerial(SerialCreationDTO $creationDTO): int
     {
 
         $lastKey = ActivationFactory::keyRepository()->findLast();
@@ -66,7 +70,7 @@ class ActivationService
 
         $newSerialExpired = $date->format("Y-m-d");
         $newSerialNumber = uuid();
-        $newSerialPeriod = 30;
+        $newSerialPeriod = $creationDTO->getPeriod();
 
         $newSerial = new Serial(null, $lastKeyId, false, $newSerialNumber, $newSerialPeriod, $newSerialExpired);
         $id = ActivationFactory::serialRepository()->save($newSerial);

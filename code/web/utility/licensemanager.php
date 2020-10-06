@@ -10,8 +10,9 @@ if ($shouldAddNewSerial) {
     $userId = null;
     $userName = $_POST['name'];
     $pcCount = $_POST['pc_count'];
+    $period = $_POST['period'];
 
-    $dto = new UserSerialCreationDTO($userName, null, $pcCount);
+    $dto = new UserSerialCreationDTO($userName, null, $pcCount, $period);
     ActivationService::instance()->makeNewSerialForUser($dto);
 }
 
