@@ -16,15 +16,18 @@ class UserSerial
 
     private $pcHash;
 
+    private $productName;
+
     private $status;
 
-    public function __construct($id, $userId, string $userName, int $serialId, string $pcHash, string $status)
+    public function __construct($id, $userId, string $userName, int $serialId, string $pcHash, string $productName, string $status)
     {
         $this->id = $id;
         $this->userId = $userId;
         $this->userName = $userName;
         $this->serialId = $serialId;
         $this->pcHash = $pcHash;
+        $this->productName = $productName;
         $this->status = $status;
     }
 
@@ -53,9 +56,21 @@ class UserSerial
         return $this->pcHash;
     }
 
+
+    public function getProductName(): string
+    {
+        return $this->productName;
+    }
+
+
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function setProductName(string $productName)
+    {
+        $this->productName = $productName;
     }
 
     public function setPcHash(string $pcHash)

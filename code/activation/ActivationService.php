@@ -30,7 +30,14 @@ class ActivationService
     public function makeNewSerialForUser(SerialCreationDTO $creationDTO)
     {
         $newSerialId = $this->makeNewSerial();
-        $newUserSerial = new UserSerial(null, $creationDTO->getUserId(), $creationDTO->getUserName(), $newSerialId, "", SerialStatusEnum::NOT_USED);
+        $newUserSerial = new UserSerial(
+            null,
+            $creationDTO->getUserId(),
+            $creationDTO->getUserName(),
+            $newSerialId,
+            "",
+            "",
+            SerialStatusEnum::NOT_USED);
 
         for ($i = 0; $i < min([$creationDTO->getPcCount(), 100]); $i++)
             ActivationFactory::userSerialRepository()->save($newUserSerial);
@@ -117,6 +124,7 @@ class ActivationService
 
         // Update user serial as ACTIVATED
         $userSerial->setPcHash($activationDTO->getPcHash());
+        $userSerial->setProductName($activationDTO->getProductName());
         $userSerial->setStatus(SerialStatusEnum::ACTIVATED);
         ActivationFactory::userSerialRepository()->save($userSerial);
 

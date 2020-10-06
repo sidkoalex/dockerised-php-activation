@@ -6,7 +6,13 @@ trait UserSerialMapping
 {
     public static function fromDbRow(array $row)
     {
-        return new UserSerial($row['id'], $row['user_id'], $row['user_name'], $row['serial_id'], $row['pc_hash'],
+        return new UserSerial(
+            $row['id'],
+            $row['user_id'],
+            $row['user_name'],
+            $row['serial_id'],
+            $row['pc_hash'],
+            $row['product_name'],
             $row['status']);
     }
 
@@ -18,6 +24,7 @@ trait UserSerialMapping
             'user_name' => $this->getUserName(),
             'serial_id' => $this->getSerialId(),
             'pc_hash' => $this->getPcHash(),
+            'product_name' => $this->getProductName(),
             'status' => $this->getStatus(),
         ];
     }
@@ -31,6 +38,8 @@ trait UserSerialMapping
     public abstract function getSerialId(): int;
 
     public abstract function getPcHash(): string;
+
+    public abstract function getProductName(): string;
 
     public abstract function getStatus(): string;
 }

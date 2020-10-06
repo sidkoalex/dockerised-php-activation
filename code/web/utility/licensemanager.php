@@ -18,8 +18,9 @@ if ($shouldAddNewSerial) {
 if ($shouldActivateSerial) {
     $serial = $_POST['serial'];
     $pcHash = $_POST['pc_hash'];
+    $productName = $_POST['product_name'];
 
-    $dto = new SerialActivationInputDTO($serial, $pcHash);
+    $dto = new SerialActivationInputDTO($serial, $pcHash, $productName);
     $activationResult = ActivationService::instance()->activateSerial($dto);
 }
 ?>
@@ -88,6 +89,10 @@ if ($shouldActivateSerial) {
             <td><input type="text" name="pc_hash" value="12345"></td>
         </tr>
         <tr>
+            <td>Product name:</td>
+            <td><input type="text" name="product_name" value="Best Software"></td>
+        </tr>
+        <tr>
             <td colspan="2"><input type="submit" value="Activate!" name="submit"></td>
         </tr>
     </table>
@@ -121,6 +126,7 @@ if ($shouldActivateSerial) {
         <th>user_name</th>
         <th>serial_id</th>
         <th>pc_hash</th>
+        <th>product_name</th>
         <th>status</th>
     </tr>
     <?php $prevSerialId = 0; ?>
@@ -133,6 +139,7 @@ if ($shouldActivateSerial) {
             </td>
             <td> <?php echo $userSerial->getSerialId(); ?></td>
             <td> <?php echo $userSerial->getPcHash(); ?></td>
+            <td> <?php echo $userSerial->getProductName(); ?></td>
             <td style="color: <?php echo $statusColors[$userSerial->getStatus()] ?>">
                 <?php echo $userSerial->getStatus(); ?>
             </td>
