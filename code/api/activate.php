@@ -17,7 +17,7 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
-
+if (empty($data)) $data = json_decode(base64_decode(file_get_contents('php://input')));
 
 if (isset($data['serial']) && isset($data['pc_hash']) && isset($data['product_name'])) {
     $serial = $data['serial'];
