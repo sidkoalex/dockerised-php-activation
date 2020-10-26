@@ -19,10 +19,10 @@ header('Content-Type: application/json');
 $data = json_decode(file_get_contents('php://input'), true);
 
 
-if (isset($data['serial']) && isset($data['pc_hash']) && isset($_POST['product_name'])) {
+if (isset($data['serial']) && isset($data['pc_hash']) && isset($data['product_name'])) {
     $serial = $data['serial'];
     $pcHash = $data['pc_hash'];
-    $productName = $_POST['product_name'];
+    $productName = $data['product_name'];
 
     $dto = new SerialActivationInputDTO($serial, $pcHash, $productName);
     $activationResult = ActivationService::instance()->activateSerial($dto);
