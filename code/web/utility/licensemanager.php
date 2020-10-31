@@ -146,7 +146,7 @@ if ($shouldActivateSerial) {
     </tr>
     <?php foreach ($userSerials as $userSerial): ?>
     <?php
-        $expireDaysInterval = date_diff(new DateTime($userSerial->getActivatedAt()), new DateTime($userSerial->getExpiry()));
+        $expireDaysInterval = date_diff(new DateTime(), new DateTime($userSerial->getExpiry()));
         $expireDays = intval($expireDaysInterval->format('%R%a'));
         if ($expireDays <= 0) $expireColor = "#e00"; else if ($expireDays <= 10) $expireColor= "#c90"; else $expireColor = '#000';
     ?>
