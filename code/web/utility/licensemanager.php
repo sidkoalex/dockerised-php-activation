@@ -44,6 +44,13 @@ if ($shouldActivateSerial) {
         border-color: #ccc;
     }
 
+    .key-table td {
+        vertical-align: top;
+        white-space: pre;
+        unicode-bidi: embed;
+        font-size: 0.9em;
+    }
+
     pre {
         display: block;
         max-width: 800px;
@@ -67,7 +74,7 @@ if ($shouldActivateSerial) {
         </tr>
         <tr>
             <td>Period:</td>
-            <td><input type="number" name="period" value="30" step="30" style="width: 60px"> (дней)</td>
+            <td><input type="number" name="period" value="30" step="30" style="width: 60px"> (days)</td>
         </tr>
         <tr>
             <td>PC count:</td>
@@ -134,9 +141,15 @@ if ($shouldActivateSerial) {
         <th>product_name</th>
         <th>status</th>
         <th>activated_at</th>
+        <th>expiry</th>
+        <th>days left</th>
     </tr>
-    <?php $prevSerialId = 0; ?>
     <?php foreach ($userSerials as $userSerial): ?>
+    <?php
+        $expireDaysInterval = date_diff(new DateTime($userSerial->getActivatedAt()), new DateTime($userSerial->getExpiry()));
+        $expireDays = intval($expireDaysInterval->format('%R%a'));
+        if ($expireDays <= 0) $expireColor = "#e00"; else if ($expireDays <= 10) $expireColor= "#c90"; else $expireColor = '#000';
+    ?>
         <tr>
             <td> <?php echo $userSerial->getId(); ?></td>
             <td> <?php echo $userSerial->getUserId(); ?></td>
@@ -150,8 +163,9 @@ if ($shouldActivateSerial) {
                 <?php echo $userSerial->getStatus(); ?>
             </td>
             <td> <?php echo $userSerial->getActivatedAt(); ?></td>
+            <td> <?php echo $userSerial->getExpiry(); ?></td>
+            <td style="color: <?php echo $expireColor;?>"> <?php if (empty($userSerial->getActivatedAt()) || empty($userSerial->getExpiry())) echo ""; else echo $expireDays ?></td>
         </tr>
-        <?php $prevSerialId = $userSerial->getSerialId(); ?>
     <?php endforeach; ?>
 </table>
 
@@ -181,7 +195,7 @@ if ($shouldActivateSerial) {
 
 <h2>Key table</h2>
 <?php $keys = ActivationFactory::keyRepository()->findAll(); ?>
-<table border='1'>
+<table border='1' class="key-table">
     <tr>
         <th>id</th>
         <th>public_key</th>
@@ -189,9 +203,9 @@ if ($shouldActivateSerial) {
     </tr>
     <?php foreach ($keys as $key): ?>
         <tr>
-            <td> <?php echo $key->getId(); ?></td>
-            <td> <?php echo $key->getPublicKey(); ?></td>
-            <td> <?php echo $key->getPrivateKey(); ?></td>
+            <td><?php echo $key->getId(); ?></td>
+            <td><pre><?php echo $key->getPublicKey(); ?></pre></td>
+            <td><pre><?php echo $key->getPrivateKey(); ?></pre></td>
         </tr>
     <?php endforeach; ?>
 </table>

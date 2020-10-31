@@ -14,7 +14,8 @@ trait UserSerialMapping
             $row['pc_hash'],
             $row['product_name'],
             $row['status'],
-            $row['activated_at']
+            $row['activated_at'],
+            $row['expiry']
         );
     }
 
@@ -29,6 +30,7 @@ trait UserSerialMapping
             'product_name' => $this->getProductName(),
             'status' => $this->getStatus(),
             'activated_at' => $this->getActivatedAt(),
+            'expiry' => $this->getExpiry()
         ];
     }
 
@@ -45,4 +47,8 @@ trait UserSerialMapping
     public abstract function getProductName(): string;
 
     public abstract function getStatus(): string;
+
+    public abstract function getActivatedAt(): string;
+
+    public abstract function getExpiry(): string;
 }

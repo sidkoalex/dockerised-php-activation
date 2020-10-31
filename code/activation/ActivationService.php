@@ -126,6 +126,7 @@ class ActivationService
         $userSerial->setProductName($activationDTO->getProductName());
         $userSerial->setStatus(SerialStatusEnum::ACTIVATED);
         $userSerial->setActivatedAt(date('Y-m-d'));
+        $userSerial->setExpiry(date('Y-m-d', strtotime('+'.$serial->getPeriod().' days')));
         ActivationFactory::userSerialRepository()->save($userSerial);
 
         // Find encrypted hash
